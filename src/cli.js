@@ -1,7 +1,9 @@
-import { Command } from "commander";
 import chalk from "chalk";
+import { Command } from "commander";
 import { enqueueJob } from "./jobs.js";
 import { startWorker } from "./worker.js";
+import { showStatus } from "./status.js";
+import { listDLQ, retryDLQ } from "./dlq.js";
 
 const program = new Command();
 
@@ -9,6 +11,11 @@ program
   .name("queuectl")
   .description("CLI-based background job queue system")
   .version("1.0.0");
+
+program
+  .command("status")
+  .description("Show summary of all job states")
+  .action(() => showStatus());
 
 program
   .command("enqueue <job>")
@@ -21,13 +28,6 @@ program
   .command("list")
   .option("--state <state>", "Filter by job state")
   .action((opts) => listJobs(opts.state));
-
-program
-  .command("status")
-  .description("Show system status")
-  .action(() => {
-    console.log(chalk.blue("System status:All Good"));
-  });
 
 /* program
   .command("worker start")
@@ -47,12 +47,12 @@ program
     console.log("✅ All workers launched.");
   }); */
 
-// ✅ Define "worker" parent command
+//  Define "worker" parent command
 const worker = program
   .command("worker")
   .description("Manage background workers");
 
-// ✅ Define "start" subcommand
+//  Define "start" subcommand
 worker
   .command("start")
   .option("--count <n>", "Number of workers", "1")
@@ -70,5 +70,17 @@ worker
       await startWorker(i, config);
     }
   });
+
+const dlq = program.command("dlq").description("Manage Dead Letter Queue");
+
+dlq
+  .command("list")
+  .description("List all jobs in Dead Letter Queue")
+  .action(() => listDLQ());
+
+dlq
+  .command("retry <id>")
+  .description("Retry a specific DLQ job by ID")
+  .action((id) => retryDLQ(id));
 
 program.parse(process.argv);
