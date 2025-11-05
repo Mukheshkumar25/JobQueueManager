@@ -1,8 +1,11 @@
 {
   "name": "queuectl",
   "version": "1.0.0",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
+  "bin": {
+    "queuectl": "./bin/queuectl"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
