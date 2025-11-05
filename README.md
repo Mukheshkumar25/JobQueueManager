@@ -275,5 +275,3 @@ queuectl dlq retry fail1
 
 ---
 
-
-Would you like me to **generate a short, clean script to record your demo** (so you can show off enqueue → worker → DLQ flow in a single video)?
