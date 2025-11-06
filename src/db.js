@@ -23,17 +23,21 @@ export function initDB() {
 
   const db = new Database(DB_PATH);
   db.pragma("journal_mode = WAL");
+  db.pragma("busy_timeout = 5000");
 
   db.exec(`
-    CREATE TABLE IF NOT EXISTS jobs
-    (
+  CREATE TABLE IF NOT EXISTS jobs
+  (
     id TEXT PRIMARY KEY,
     command TEXT NOT NULL,
     state TEXT NOT NULL DEFAULT 'pending',
     attempts INTEGER NOT NULL DEFAULT 0,
     max_retries INTEGER NOT NULL DEFAULT 3,
+    priority INTEGER NOT NULL DEFAULT 1,  --handles priority for jobs
     created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL);`);
+    updated_at TEXT NOT NULL
+  );
+`);
 
   return db;
 }

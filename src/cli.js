@@ -1,9 +1,17 @@
 import chalk from "chalk";
+import { fork } from "child_process";
 import { Command } from "commander";
 import { enqueueJob } from "./jobs.js";
 import { startWorker } from "./worker.js";
 import { showStatus } from "./status.js";
 import { listDLQ, retryDLQ } from "./dlq.js";
+import path from "path";
+import { listJobs } from "./listJobs.js";
+import { fileURLToPath } from "url";
+import { setConfig, getConfig, listConfig } from "./config.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const program = new Command();
 
@@ -41,18 +49,16 @@ program
     };
 
     for (let i = 1; i <= count; i++) {
-      console.log(`➡️  Launching worker ${i}`);
+      console.log(`  Launching worker ${i}`);
       await startWorker(i, config);
     }
-    console.log("✅ All workers launched.");
+    console.log(" All workers launched.");
   }); */
 
-//  Define "worker" parent command
 const worker = program
   .command("worker")
   .description("Manage background workers");
 
-//  Define "start" subcommand
 worker
   .command("start")
   .option("--count <n>", "Number of workers", "1")
@@ -60,14 +66,16 @@ worker
   .action(async (opts) => {
     console.log(chalk.blue("🚀 Worker start command triggered..."));
     const count = parseInt(opts.count);
-    const config = {
-      backoffBase: 2,
-      pollInterval: 2000, // 2 seconds
-    };
+
+    const workerPath = path.join(__dirname, "worker-runner.js");
 
     for (let i = 1; i <= count; i++) {
-      console.log(chalk.yellow(`➡️  Launching worker ${i}`));
-      await startWorker(i, config);
+      console.log(chalk.yellow(`➡️  Launching worker process ${i}`));
+      const child = fork(workerPath, [i], { stdio: "inherit" });
+
+      child.on("exit", (code) => {
+        console.log(chalk.magenta(`💀 Worker ${i} exited with code ${code}`));
+      });
     }
   });
 
@@ -82,5 +90,23 @@ dlq
   .command("retry <id>")
   .description("Retry a specific DLQ job by ID")
   .action((id) => retryDLQ(id));
+
+// ⚙️ Config management
+const configCmd = program.command("config").description("Manage configuration");
+
+configCmd
+  .command("set <key> <value>")
+  .description("Set a configuration value")
+  .action((key, value) => setConfig(key, value));
+
+configCmd
+  .command("get <key>")
+  .description("Get a configuration value")
+  .action((key) => getConfig(key));
+
+configCmd
+  .command("list")
+  .description("List all configuration values")
+  .action(() => listConfig());
 
 program.parse(process.argv);
