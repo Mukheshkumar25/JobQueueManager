@@ -5,7 +5,7 @@ import { loadConfig } from "./config.js";
 
 export function enqueueJob(jobData) {
   const db = initDB();
-  const config = loadConfig();
+  const globalConfig = loadConfig();
   let job;
 
   try {
@@ -23,7 +23,7 @@ export function enqueueJob(jobData) {
     command,
     state = "pending",
     attempts = 0,
-    max_retries = config.maxRetries,
+    max_retries = globalConfig.maxRetries,
     priority = 1,
   } = job;
 

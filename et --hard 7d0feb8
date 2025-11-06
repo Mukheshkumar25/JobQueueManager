@@ -1,0 +1,7 @@
+[33m7d0feb8[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;33mtag: [m[1;33mv1.5[m[33m, [m[1;31morigin/main[m[33m)[m Phase 5: Added persistent config management, dynamic retry settings, and job list command with CLI table output
+[33m9617987[m Update README.md
+[33m79c8b85[m Phase 4: Added status and DLQ management commands with full documentation in README.md
+[33m22078d5[m Create README.md for QueueCTL project
+[33m64722de[m Phase 3: Implemented worker system with job execution, retries, DLQ, and graceful shutdown
+[33m1b40722[m Phase 2: Added SQLite persistent storage (data/queue.db), enqueue & list commands, improved db.js for auto directory creation
+[33mb4efb6d[m Initial project setup
