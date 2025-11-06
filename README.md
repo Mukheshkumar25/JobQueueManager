@@ -269,7 +269,7 @@ queuectl dlq retry fail1
 ## 👨‍💻 **Author**
 
 **Mukhesh Kumar Reddy**
-*Backend Developer | QueueCTL Creator*
+*AI-ML Enthusiast,Full Stack Developer | QueueCTL Creator*
 📧 mukheshkumarreddy@gmail.com
 🔗 https://github.com/Mukheshkumar25
 
