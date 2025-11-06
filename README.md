@@ -2,7 +2,7 @@
 
 > 🚀 A minimal, production-grade job queue manager built with **Node.js** and **SQLite**.
 > Supports background job execution, retries with exponential backoff, persistent storage, and a Dead Letter Queue (DLQ).
-
+To Know more about my project go through this Explanation video:https://drive.google.com/file/d/1u-ifk04ajaa0YIWNQgLNW3hAyJp44yoF/view?usp=sharing
 ---
 
 ## 🎯 **Objective**
